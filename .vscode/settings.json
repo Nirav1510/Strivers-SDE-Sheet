@@ -1,7 +1,0 @@
-{
-    "files.associations": {
-        "*.js": "javascript",
-        "vector": "cpp",
-        "random": "cpp"
-    }
-}
