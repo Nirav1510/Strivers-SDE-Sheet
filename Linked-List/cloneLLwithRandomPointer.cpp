@@ -1,199 +1,93 @@
 #include <bits/stdc++.h>
 
 using namespace std;
-/* Link list Node */
-struct Node {
-    int data;
-    Node *next;
-    Node *arb;
 
-    Node(int x) {
-        data = x;
+class Node
+{
+public:
+    int val;
+    Node *next;
+    Node *random;
+
+    Node(int _val)
+    {
+        val = _val;
         next = NULL;
-        arb = NULL;
+        random = NULL;
     }
 };
 
+// TC = o(n) SC = o(1)
 
-
- // } Driver Code Ends
 class Solution
 {
-    public:
-    Node *copyList(Node *head)
+public:
+    Node *copyRandomList(Node *head)
     {
-        if(!head) return NULL;
-        
-        Node* curr = head;
-        while(curr){
-            Node* temp = curr->next;
-            curr->next = new Node(curr->data);
+        if (!head)
+            return nullptr;
+
+        Node *curr = head;
+        while (curr)
+        {
+            Node *temp = curr->next;
+            curr->next = new Node(curr->val);
             curr->next->next = temp;
             curr = temp;
         }
-        
         curr = head;
-        
-        while(curr){
-            if(curr->next){
-                curr->next->arb = (curr->arb!=NULL) ? curr->arb->next : NULL;
+
+        while (curr)
+        {
+            if (curr->next)
+            {
+                curr->next->random = curr->random ? curr->random->next : NULL;
             }
             curr = curr->next->next;
         }
-        
-        Node* original = head, *copy = head->next;
-        Node* ans = copy;
-        while(original){
-            original->next = original->next->next;
-            copy->next = (copy->next != NULL) ? copy->next->next  : copy->next;
-            original = original->next;
+
+        Node *ori = head, *copy = head->next, *ans = copy;
+        while (ori)
+        {
+            ori->next = ori->next->next;
+            copy->next = copy->next ? copy->next->next : copy->next;
+            ori = ori->next;
             copy = copy->next;
         }
         return ans;
     }
-
 };
 
-// { Driver Code Starts.
+// TC = o(n) SC = o(n)
 
-
-void print(Node *root) {
-    Node *temp = root;
-    while (temp != NULL) {
-        int k;
-        if (temp->arb == NULL)
-            k = -1;
-        else
-            k = temp->arb->data;
-        cout << temp->data << " " << k << " ";
-        temp = temp->next;
-    }
-}
-
-
-void append(Node **head_ref, Node **tail_ref, int new_data) {
-
-    Node *new_node = new Node(new_data);
-    if (*head_ref == NULL) {
-        *head_ref = new_node;
-    } else
-        (*tail_ref)->next = new_node;
-    *tail_ref = new_node;
-}
-
-bool validation(Node *head, Node *res) {
-
-
-    Node *temp1 = head;
-    Node *temp2 = res;
-
-    int len1 = 0, len2 = 0;
-    while (temp1 != NULL) {
-        len1++;
-        temp1 = temp1->next;
-    }
-    while (temp2 != NULL) {
-        len2++;
-        temp2 = temp2->next;
-    }
-
-    /*if lengths not equal */
-
-    if (len1 != len2) return false;
-
-    temp1 = head;
-    temp2 = res;
-    map<Node*,Node*> a;
-    while (temp1 != NULL) {
-        
-        if(temp1==temp2)
-            return false;
-        
-        if (temp1->data != temp2->data) return false;
-        if (temp1->arb != NULL and temp2->arb != NULL) {
-            if (temp1->arb->data != temp2->arb->data)
-                return false;
-        } else if (temp1->arb != NULL and temp2->arb == NULL)
-            return false;
-          else if (temp1->arb == NULL and temp2->arb != NULL)
-            return false;
-        a[temp1]=temp2;
-        temp1 = temp1->next;
-        temp2 = temp2->next;
-    }
-    
-
-    temp1 = head;
-    temp2 = res;
-    while (temp1 != NULL) {
-        
-        if (temp1->arb != NULL and temp2->arb != NULL) {
-            if (a[temp1->arb] != temp2->arb) return false;
+class Solution
+{
+public:
+    Node *copyRandomList(Node *head)
+    {
+        if (!head)
+            return head;
+        unordered_map<Node *, Node *> dict;
+        Node *res = new Node(head->val);
+        Node *cur = head->next;
+        Node *preNew = res;
+        dict[head] = res;
+        while (cur)
+        {
+            preNew->next = new Node(cur->val);
+            dict[cur] = preNew->next;
+            preNew = preNew->next;
+            cur = cur->next;
         }
-        temp1 = temp1->next;
-        temp2 = temp2->next;
-    }
-    return true;
-}
 
-
-
-int main() {
-
-    int T, i, n, l, k;
-    Node *generated_addr = NULL;
-     /*reading input stuff*/
-    cin >> T;
-    while (T--) {
-        generated_addr = NULL;
-        struct Node *head = NULL, *tail = NULL;
-        struct Node *head2 = NULL, *tail2 = NULL;
-        cin >> n >> k;
-        for (i = 1; i <= n; i++) {
-            cin >> l;
-            append(&head, &tail, l);
-            append(&head2, &tail2, l);
+        cur = head;
+        preNew = res;
+        while (cur)
+        {
+            preNew->random = dict[cur->random];
+            cur = cur->next;
+            preNew = preNew->next;
         }
-         for (int i = 0; i < k; i++) {
-            int a, b;
-            cin >> a >> b;
-
-            Node *tempA = head;
-            Node *temp2A = head2;
-            int count = -1;
-
-            while (tempA != NULL) {
-                count++;
-                if (count == a - 1) break;
-                tempA = tempA->next;
-                temp2A = temp2A->next;
-            }
-            Node *tempB = head;
-            Node *temp2B = head2;
-            count = -1;
-
-            while (tempB != NULL) {
-                count++;
-                if (count == b - 1) break;
-                tempB = tempB->next;
-                temp2B = temp2B->next;
-            }
-
-            // when both a is greater than N
-            if (a <= n){
-                tempA->arb = tempB;
-                temp2A->arb = temp2B;
-            }
-        }
-        /*read finished*/
-
-        generated_addr = head;
-        Solution ob;
-        struct Node *res = ob.copyList(head);
-        if(validation(head2,res)&&validation(head,res))
-            cout << validation(head2, res) << endl;
-        else
-            cout << 0 << endl;
+        return res;
     }
-    return 0;
-}  // } Driver Code Ends
+};
