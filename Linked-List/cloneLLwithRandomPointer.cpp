@@ -4,17 +4,17 @@ using namespace std;
 
 class Node
 {
-public:
-    int val;
-    Node *next;
-    Node *random;
+    public:
+        int val;
+        Node *next;
+        Node *random;
 
-    Node(int _val)
-    {
-        val = _val;
-        next = NULL;
-        random = NULL;
-    }
+        Node(int _val)
+        {
+            val = _val;
+            next = NULL;
+            random = NULL;
+        }
 };
 
 // TC = o(n) SC = o(1)
@@ -57,6 +57,7 @@ class Solution
         return ans;
     }
 };
+
 
 // TC = o(n) SC = o(n)
 
