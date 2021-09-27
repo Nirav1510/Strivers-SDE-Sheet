@@ -48,3 +48,42 @@ public:
         }
     }
 };
+
+//or
+class MinStack
+{
+    stack<pair<int, int>> st;
+
+public:
+    MinStack(){
+        
+    }
+
+    void push(int val)
+    {
+        if (st.empty())
+            st.push({val, val});
+        else
+        {
+            int mi = (val < st.top().second) ? val : st.top().second;
+            st.push({val, mi});
+        }
+    }
+
+    void pop()
+    {
+        if (st.empty())
+            return;
+        st.pop();
+    }
+
+    int top()
+    {
+        return st.top().first;
+    }
+
+    int getMin()
+    {
+        return st.top().second;
+    }
+};
