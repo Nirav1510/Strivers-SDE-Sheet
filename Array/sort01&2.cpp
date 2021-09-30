@@ -3,7 +3,7 @@ using namespace std;
 
 class Solution
 {
-public:
+    public:
     void sort012(int A[], int n)
     {
         int i = 0, j = 0, k = n - 1;
@@ -21,7 +21,6 @@ public:
 
 int main()
 {
-
     int t;
     cin >> t;
 
